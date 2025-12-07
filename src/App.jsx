@@ -13,10 +13,40 @@ function App() {
   // Debug state
   const [lastEvent, setLastEvent] = useState('NONE')
   const [debugUrl, setDebugUrl] = useState('')
+  const [manualLoginStatus, setManualLoginStatus] = useState('IDLE')
 
   useEffect(() => {
     // Capture URL on mount to see if hash is present
     setDebugUrl(window.location.href)
+
+    // Manual hash parsing for auth tokens
+    if (window.location.hash.includes('access_token')) {
+      setManualLoginStatus('DETECTED_TOKENS')
+      const params = new URLSearchParams(window.location.hash.replace('#', ''))
+      const access_token = params.get('access_token')
+      const refresh_token = params.get('refresh_token')
+
+      if (access_token && refresh_token) {
+        setManualLoginStatus('ATTEMPTING_LOGIN')
+        supabase.auth.setSession({ access_token, refresh_token })
+          .then(({ data, error }) => {
+            if (error) {
+              console.error('Manual login error:', error)
+              setManualLoginStatus(`ERROR: ${error.message}`)
+            } else if (data.session) {
+              console.log('Manual login success:', data.session)
+              setManualLoginStatus('SUCCESS')
+              setSession(data.session)
+              // Clear hash to prevent re-processing
+              window.history.replaceState(null, '', window.location.pathname)
+            } else {
+              setManualLoginStatus('NO_SESSION_RETURNED')
+            }
+          })
+      } else {
+        setManualLoginStatus('MISSING_TOKENS')
+      }
+    }
 
     if (!supabase) {
       setConfigError(true)
@@ -26,24 +56,9 @@ function App() {
 
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
-      // Manual fallback: If no session but hash has tokens
-      if (!session && window.location.hash.includes('access_token')) {
-        const params = new URLSearchParams(window.location.hash.replace('#', ''))
-        const access_token = params.get('access_token')
-        const refresh_token = params.get('refresh_token')
-
-        if (access_token && refresh_token) {
-          supabase.auth.setSession({ access_token, refresh_token }).then(({ data, error }) => {
-            if (!error && data.session) {
-              setSession(data.session)
-            }
-            setLoading(false)
-          })
-          return // Wait for setSession
-        }
+      if (session) {
+        setSession(session)
       }
-
-      setSession(session)
       setLoading(false)
     })
 
@@ -52,7 +67,9 @@ function App() {
     } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('Auth event:', event, session)
       setLastEvent(event)
-      setSession(session)
+      if (session) {
+        setSession(session)
+      }
       setLoading(false)
     })
 
@@ -82,6 +99,7 @@ function App() {
       <div className="fixed bottom-0 left-0 w-full bg-black/90 text-xs text-green-400 p-2 font-mono break-all z-50 border-t border-green-900 opacity-95">
         <p>LOADING: {loading.toString()}</p>
         <p>EVENT: {lastEvent}</p>
+        <p>MANUAL LOGIN: {manualLoginStatus}</p>
         <p>SESSION: {session ? session.user.email : 'NULL'}</p>
         <p>HASH: {hash.substring(0, 20)}...</p>
         <p>TOKENS: AT={hasAT ? 'YES' : 'NO'}, RT={hasRT ? 'YES' : 'NO'}</p>
