@@ -95,11 +95,16 @@ function App() {
     const hasAT = params.has('access_token')
     const hasRT = params.has('refresh_token')
 
+    const url = import.meta.env.VITE_SUPABASE_URL
+    const key = import.meta.env.VITE_SUPABASE_ANON_KEY
+
     return (
       <div className="fixed bottom-0 left-0 w-full bg-black/90 text-xs text-green-400 p-2 font-mono break-all z-50 border-t border-green-900 opacity-95">
         <p>LOADING: {loading.toString()}</p>
         <p>EVENT: {lastEvent}</p>
-        <p>MANUAL LOGIN: {manualLoginStatus}</p>
+        <p>MANUAL: {manualLoginStatus}</p>
+        <p>URL Config: {url}</p>
+        <p>Key Config: {key ? key.substring(0, 15) + '...' : 'MISSING'}</p>
         <p>SESSION: {session ? session.user.email : 'NULL'}</p>
         <p>HASH: {hash.substring(0, 20)}...</p>
         <p>TOKENS: AT={hasAT ? 'YES' : 'NO'}, RT={hasRT ? 'YES' : 'NO'}</p>
