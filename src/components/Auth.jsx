@@ -46,12 +46,11 @@ export default function AuthComponent() {
                             key={player}
                             onClick={() => handleLogin(player)}
                             disabled={loading}
-                            className="p-4 bg-gray-800 hover:bg-gray-700 active:bg-blue-600 rounded-lg transition-colors duration-200 flex flex-col items-center gap-2 group border border-gray-700 hover:border-gray-600"
+                            className="p-6 bg-gray-800 hover:bg-gray-700 active:bg-blue-600 rounded-xl transition-all duration-200 flex flex-col items-center justify-center gap-2 group border border-gray-700 hover:border-gray-500 shadow-lg hover:shadow-xl hover:-translate-y-1"
                         >
-                            <div className="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-lg group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                                {player.charAt(0)}
-                            </div>
-                            <span className="font-medium">{player}</span>
+                            <span className="font-bold text-xl text-gray-200 group-hover:text-white transition-colors text-center">
+                                {player}
+                            </span>
                         </button>
                     ))}
                 </div>
