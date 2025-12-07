@@ -7,28 +7,43 @@ import Dashboard from './components/Dashboard'
 
 function App() {
   const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [configError, setConfigError] = useState(!supabase)
 
   useEffect(() => {
     if (!supabase) {
       setConfigError(true)
+      setLoading(false)
       return
     }
 
+    // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
+      setLoading(false)
     })
 
+    // Listen for changes on auth state (logged in, signed out, etc.)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
+      setLoading(false)
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#242424] text-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
   if (configError) {
+    // ... existing config error code ...
     return (
       <div className="min-h-screen bg-[#242424] text-white flex items-center justify-center p-4">
         <div className="max-w-md bg-red-900/20 border border-red-700 p-6 rounded-xl text-center">
