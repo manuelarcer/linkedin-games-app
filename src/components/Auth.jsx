@@ -27,7 +27,7 @@ export default function AuthComponent() {
                             },
                         },
                     }}
-                    providers={[]}
+                    providers={['google']}
                 />
             </div>
         </div>
