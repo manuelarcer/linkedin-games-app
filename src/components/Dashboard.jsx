@@ -1,4 +1,3 @@
-```
 import { useState, useEffect } from 'react'
 import { supabase } from '../utils/supabaseClient'
 import ScoreInput from './ScoreInput'
@@ -20,12 +19,12 @@ export default function Dashboard({ session }) {
     // In a real app, you might want to ask for username first
     const { error } = await supabase
       .from('profiles')
-      .upsert({ 
-        id: user.id, 
-        username: user.email.split('@')[0], 
-        updated_at: new Date() 
+      .upsert({
+        id: user.id,
+        username: user.email.split('@')[0],
+        updated_at: new Date()
       }, { onConflict: 'id' })
-    
+
     if (error) console.error('Error creating profile:', error)
   }
 
@@ -55,14 +54,14 @@ export default function Dashboard({ session }) {
           <h1 className="text-2xl font-bold text-white">Your Games Dashboard</h1>
           <p className="text-gray-400 text-sm">Welcome, {session.user.email}</p>
         </div>
-        <button 
+        <button
           onClick={() => supabase.auth.signOut()}
           className="px-4 py-2 bg-red-600/20 hover:bg-red-600/40 text-red-500 rounded-lg text-sm transition-colors"
         >
           Sign Out
         </button>
       </header>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         {/* Left Column: Input */}
         <div>
@@ -91,7 +90,7 @@ export default function Dashboard({ session }) {
                   </div>
                   <div className="text-right">
                     <div className="font-mono text-[#646cff] font-bold">
-                       {Math.floor(score.time_seconds / 60)}:{(score.time_seconds % 60).toString().padStart(2, '0')}
+                      {Math.floor(score.time_seconds / 60)}:{(score.time_seconds % 60).toString().padStart(2, '0')}
                     </div>
                   </div>
                 </div>
@@ -100,10 +99,9 @@ export default function Dashboard({ session }) {
           )}
         </div>
       </div>
-      
+
       {/* Full Width Leaderboard */}
       <Leaderboard />
     </div>
   )
 }
-```
