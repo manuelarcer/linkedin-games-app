@@ -50,15 +50,25 @@ function App() {
   }
 
   // Debug UI Component
-  const DebugPanel = () => (
-    <div className="fixed bottom-0 left-0 w-full bg-black/90 text-xs text-green-400 p-2 font-mono break-all z-50 border-t border-green-900 opacity-75 hover:opacity-100 transition-opacity">
-      <p>LOADING: {loading.toString()}</p>
-      <p>EVENT: {lastEvent}</p>
-      <p>SESSION: {session ? session.user.email : 'NULL'}</p>
-      <p>URL contains hash: {debugUrl.includes('#') ? 'YES' : 'NO'}</p>
-      <p>Config Error: {configError.toString()}</p>
-    </div>
-  )
+  const DebugPanel = () => {
+    const hash = window.location.hash
+    const search = window.location.search
+    const params = new URLSearchParams(hash.replace('#', ''))
+    const searchParams = new URLSearchParams(search)
+
+    const error = params.get('error_description') || searchParams.get('error_description') || params.get('error') || 'None'
+
+    return (
+      <div className="fixed bottom-0 left-0 w-full bg-black/90 text-xs text-green-400 p-2 font-mono break-all z-50 border-t border-green-900 opacity-95">
+        <p>LOADING: {loading.toString()}</p>
+        <p>EVENT: {lastEvent}</p>
+        <p>SESSION: {session ? session.user.email : 'NULL'}</p>
+        <p>HASH: {hash.substring(0, 30)}...</p>
+        <p>ERROR: {error}</p>
+        <p>Config Error: {configError.toString()}</p>
+      </div>
+    )
+  }
 
   if (configError) {
     return (
