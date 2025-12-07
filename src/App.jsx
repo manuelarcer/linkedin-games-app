@@ -24,7 +24,25 @@ function App() {
       return
     }
 
+    // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
+      // Manual fallback: If no session but hash has tokens
+      if (!session && window.location.hash.includes('access_token')) {
+        const params = new URLSearchParams(window.location.hash.replace('#', ''))
+        const access_token = params.get('access_token')
+        const refresh_token = params.get('refresh_token')
+
+        if (access_token && refresh_token) {
+          supabase.auth.setSession({ access_token, refresh_token }).then(({ data, error }) => {
+            if (!error && data.session) {
+              setSession(data.session)
+            }
+            setLoading(false)
+          })
+          return // Wait for setSession
+        }
+      }
+
       setSession(session)
       setLoading(false)
     })
