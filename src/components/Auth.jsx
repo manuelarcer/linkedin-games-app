@@ -28,6 +28,7 @@ export default function AuthComponent() {
                         },
                     }}
                     providers={['google']}
+                    redirectTo={window.location.origin}
                 />
             </div>
         </div>
