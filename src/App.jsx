@@ -39,18 +39,14 @@ function App() {
 
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setSession(session)
-      }
+      setSession(session)
       setLoading(false)
     })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setSession(session)
-      }
+      setSession(session)
       setLoading(false)
     })
 
