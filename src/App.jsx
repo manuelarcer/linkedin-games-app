@@ -66,6 +66,15 @@ function App() {
         <p>HASH: {hash.substring(0, 30)}...</p>
         <p>ERROR: {error}</p>
         <p>Config Error: {configError.toString()}</p>
+        <button
+          onClick={() => {
+            localStorage.clear()
+            window.location.href = window.location.origin
+          }}
+          className="mt-2 bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+        >
+          CLEAR DATA & RELOAD
+        </button>
       </div>
     )
   }
