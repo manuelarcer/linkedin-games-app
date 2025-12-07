@@ -73,7 +73,7 @@ function App() {
           <h1 className="text-xl font-bold text-red-500 mb-2">Configuration Error</h1>
           <code className="block text-gray-400">VITE_SUPABASE_URL</code>
         </div>
-        <DebugPanel />
+
       </div>
     )
   }
@@ -82,7 +82,7 @@ function App() {
     return (
       <>
         <AuthComponent />
-        <DebugPanel />
+
       </>
     )
   }
@@ -94,7 +94,7 @@ function App() {
           <Route path="/" element={<Dashboard session={session} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        <DebugPanel />
+
       </div>
     </Router>
   )
