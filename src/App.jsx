@@ -7,12 +7,10 @@ import Dashboard from './components/Dashboard'
 
 function App() {
   const [session, setSession] = useState(null)
-  const [configError, setConfigError] = useState(false)
+  const [configError, setConfigError] = useState(!supabase)
 
   useEffect(() => {
-    // Check if configuration is missing
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-    if (!supabaseUrl || supabaseUrl === 'YOUR_SUPABASE_URL') {
+    if (!supabase) {
       setConfigError(true)
       return
     }
@@ -33,15 +31,19 @@ function App() {
   if (configError) {
     return (
       <div className="min-h-screen bg-[#242424] text-white flex items-center justify-center p-4">
-        <div className="max-w-md bg-red-900/20 border border-red-700 p-6 rounded-xl">
+        <div className="max-w-md bg-red-900/20 border border-red-700 p-6 rounded-xl text-center">
           <h1 className="text-xl font-bold text-red-500 mb-2">Configuration Error</h1>
-          <p className="mb-4">The application could not connect to the database.</p>
-          <div className="text-sm bg-black/50 p-3 rounded">
-            <strong>Missing Environment Variable:</strong><br />
-            <code>VITE_SUPABASE_URL</code>
+          <p className="mb-4 text-gray-300">The application could not connect to Supabase.</p>
+
+          <div className="text-sm bg-black/50 p-4 rounded-lg text-left overflow-x-auto mb-4 border border-red-900/50">
+            <p className="font-semibold text-red-400 mb-1">Missing Environment Variables:</p>
+            <code className="block text-gray-400">VITE_SUPABASE_URL</code>
+            <code className="block text-gray-400">VITE_SUPABASE_ANON_KEY</code>
           </div>
-          <p className="mt-4 text-sm text-gray-400">
-            If you are on Vercel, please go to <strong>Settings {'>'} Environment Variables</strong> and add your Supabase credentials.
+
+          <p className="text-sm text-gray-400">
+            Please check your Vercel project settings under <br />
+            <strong>Settings &rarr; Environment Variables</strong>
           </p>
         </div>
       </div>
