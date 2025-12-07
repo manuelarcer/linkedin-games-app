@@ -5,7 +5,7 @@ import { supabase } from '../utils/supabaseClient'
 import { Calendar, Clipboard, Gamepad2, Timer, Trophy } from 'lucide-react'
 
 export default function ScoreInput({ onScoreSubmitted, user }) {
-    const [activeTab, setActiveTab] = useState('manual') // 'manual' | 'paste'
+    const [activeTab, setActiveTab] = useState('paste') // 'manual' | 'paste'
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState(null) // { type: 'success'|'error', text: '' }
 
@@ -205,6 +205,7 @@ export default function ScoreInput({ onScoreSubmitted, user }) {
                             <label className="block text-xs font-medium text-gray-400 mb-1">Paste WhatsApp Text</label>
                             <div className="relative">
                                 <textarea
+                                    autoFocus
                                     className="w-full h-32 bg-[#242424] border border-gray-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-[#646cff]"
                                     placeholder={`Example:
 Queens #123 1:30
